@@ -313,6 +313,7 @@ def train(train_data, test_data=None):
     
     print("Optimization Finished!")
     sess.run(val_adj_info.op)
+    print("made it here")
     val_cost, val_f1_mic, val_f1_mac, duration = incremental_evaluate(sess, model, minibatch, FLAGS.batch_size)
     print("Full validation stats:",
                   "loss=", "{:.5f}".format(val_cost),

@@ -5,7 +5,7 @@ import random
 import json
 import sys
 import os
-
+#import igraph
 import networkx as nx
 from networkx.readwrite import json_graph
 version_info = list(map(int, nx.__version__.split('.')))
@@ -71,7 +71,10 @@ def load_data(prefix, normalize=True, load_walks=False):
         with open(prefix + "-walks.txt") as fp:
             for line in fp:
                 walks.append(map(conversion, line.split()))
-
+    # g = igraph.Graph(directed=False)
+    # g.add_vertices(G.nodes())
+    # g.add_edges(G.edges())
+    # igraph.igraph_write_graph_ncol(g,"igraph_out.ncol")
     return G, feats, id_map, walks, class_map
 
 def run_random_walks(G, nodes, num_walks=N_WALKS):

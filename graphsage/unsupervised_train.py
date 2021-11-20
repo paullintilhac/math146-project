@@ -109,9 +109,14 @@ def save_val_embeddings(sess, model, minibatch_iter, size, out_dir, mod=""):
                 val_embeddings.append(outs_val[-1][i,:])
                 nodes.append(edge[0])
                 seen.add(edge[0])
+    print("out dir: " + str(out_dir))
+    print("log dir exists? " + str(os.path.exists(out_dir)))
     if not os.path.exists(out_dir):
+        print("creating directory " + out_dir)
         os.makedirs(out_dir)
     val_embeddings = np.vstack(val_embeddings)
+    #print("val_embeddings: " + str(val_embeddings))
+    np.savetxt(out_dir + name + mod +".csv", val_embeddings, delimiter=",")
     np.save(out_dir + name + mod + ".npy",  val_embeddings)
     with open(out_dir + name + mod + ".txt", "w") as fp:
         fp.write("\n".join(map(str,nodes)))
@@ -316,6 +321,7 @@ def train(train_data, test_data=None):
                 break
     
     print("Optimization Finished!")
+    print("save embeddings? "+str(FLAGS.save_embeddings))
     if FLAGS.save_embeddings:
         sess.run(val_adj_info.op)
 
@@ -366,6 +372,7 @@ def train(train_data, test_data=None):
                               "train_mrr=", "{:.5f}".format(outs[-2]))
                     test_steps += 1
             train_time = time.time() - start_time
+            print("log dir: " + str(log_dir()))
             save_val_embeddings(sess, model, minibatch, FLAGS.validate_batch_size, log_dir(), mod="-test")
             print("Total time: ", train_time+walk_time)
             print("Walk time: ", walk_time)
@@ -376,6 +383,7 @@ def train(train_data, test_data=None):
 def main(argv=None):
     print("Loading training data..")
     train_data = load_data(FLAGS.train_prefix, load_walks=True)
+    print("train data: " + str(train_data) )
     print("Done loading training data..")
     train(train_data)
 
